@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt-nodejs')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
+const cryptoRandomString = require('crypto-random-string')
 const keys = require('../keys')
 const User = require('../models/user.model')
 const Code = require('../models/code.model')
@@ -62,12 +63,14 @@ module.exports.createUser = async (req, res) => {
             })
 
             const baseUrl = req.protocol + '://' + req.get('host')
-            const secretCode = '123'
-            // const newCode = new Code({
-            //     code: secretCode,
-            //     email: user.email,
-            // })
-            // await newCode.save()
+            const secretCode = cryptoRandomString({
+                length: 6,
+            })
+            const newCode = new Code({
+                code: secretCode,
+                email: user.email,
+            })
+            await newCode.save()
 
             const data = {
                 from: `YOUR NAME <anonsKiev>`,
@@ -76,7 +79,18 @@ module.exports.createUser = async (req, res) => {
                 text: `Please use the following link within the next 10 minutes to activate your account on YOUR APP: ${baseUrl}/api/auth/verification/verify-account/${user._id}/${secretCode}`,
                 html: `<p>Please use the following link within the next 10 minutes to activate your account on YOUR APP: <strong><a href="${baseUrl}/api/auth/verification/verify-account/${user._id}/${secretCode}" target="_blank">Email bestätigen</a></strong></p>`,
             }
-            await emailService.sendMail(data)
+            emailService.sendMail(data, (error, info) => {
+                if (error) {
+                    return console.log(error)
+                }
+                console.log('Message sent: %s', info.messageId)
+                console.log(
+                    'Preview URL: %s',
+                    nodemailer.getTestMessageUrl(info)
+                )
+
+                res.render('contact', { msg: 'Email has been sent' })
+            })
 
             res.json({
                 success: true,

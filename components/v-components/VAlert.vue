@@ -31,6 +31,9 @@ export default {
     &.success
         background-color: $success
 
+    &.error
+        background-color: red
+
     &.warning
         background-color: $warning
 </style>

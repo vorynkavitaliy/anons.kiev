@@ -13,14 +13,19 @@ export const mutations = {
 
 export const actions = {
     async login({ commit, dispatch }, payload) {
+        commit('clearError', null, { root: true })
+        commit('setLoading', true, { root: true })
         try {
             const { token } = await this.$axios.$post(
                 '/api/auth/admin/login',
                 payload
             )
             dispatch('setToken', token)
+            commit('setLoading', false, { root: true })
+            commit('setSuccess', 'Вы успешно вошли в аккаунт', { root: true })
         } catch (e) {
-            commit('setError', e, { root: true })
+            commit('setError', 'Вы не верно ввели данные', { root: true })
+            commit('setLoading', false, { root: true })
             throw e
         }
     },
@@ -43,8 +48,15 @@ export const actions = {
         try {
             await this.$axios.$post('/api/auth/admin/create', payload)
             commit('setLoading', false, { root: true })
+            commit('setSuccess', 'Вы успешно зарешестрировались', {
+                root: true,
+            })
         } catch (e) {
-            commit('setError', e, { root: true })
+            commit(
+                'setError',
+                'Вы не верно ввели данные или такой email уже существует',
+                { root: true }
+            )
             commit('setLoading', false, { root: true })
             throw e
         }

@@ -30,7 +30,15 @@
                         required
                     />
 
-                    <v-btn block rounded="6" class="p-2 mt-3">Войти</v-btn>
+                    <v-btn
+                        block
+                        rounded="6"
+                        :disable="loading"
+                        class="p-2 mt-3"
+                    >
+                        <span v-if="!loading">Войти</span>
+                        <v-loader v-else size="20" />
+                    </v-btn>
                 </form>
                 <div
                     ref="reg-block"
@@ -107,6 +115,9 @@
                 </div>
             </div>
         </v-container>
+        <v-alert v-show="alert" :type="error ? 'error' : 'success'">
+            {{ error ? error : success }}
+        </v-alert>
     </main>
 </template>
 
@@ -116,6 +127,7 @@ export default {
     name: 'Auth',
     data() {
         return {
+            alert: false,
             disableReg: true,
             disableLog: true,
             reg: false,
@@ -152,6 +164,14 @@ export default {
         loading() {
             return this.$store.getters.loading
         },
+
+        error() {
+            return this.$store.getters.error
+        },
+
+        success() {
+            return this.$store.getters.success
+        },
     },
 
     mounted() {
@@ -169,9 +189,11 @@ export default {
                 }
 
                 await this.$store.dispatch('auth/login', formData)
+                this.showAlert()
                 this.loading = false
                 this.$router.push('/')
             } catch (error) {
+                this.showAlert()
                 this.loading = false
             }
         },
@@ -191,11 +213,13 @@ export default {
                     }
                     await this.$store.dispatch('auth/createUser', formData)
                     this.loading = false
+                    this.showAlert()
                     this.email = ''
                     this.password = ''
                     this.confirmPassword = ''
                     this.closeReg()
                 } catch (error) {
+                    this.showAlert()
                     this.loading = false
                 }
             } else {
@@ -216,6 +240,12 @@ export default {
         closeReg() {
             this.reg = false
             this.$refs.form.style.height = '100%'
+        },
+
+        showAlert() {
+            this.alert = true
+
+            setTimeout(() => (this.alert = false), 1500)
         },
     },
 }

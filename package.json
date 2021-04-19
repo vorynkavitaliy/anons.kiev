@@ -31,7 +31,7 @@
         "bcrypt-nodejs": "0.0.3",
         "cookie-session": "^1.4.0",
         "cross-env": "^7.0.3",
-        "crypto-random-string": "^4.0.0",
+        "crypto-random-string": "^3.3.1",
         "dotenv": "^8.2.0",
         "eslint": "^7.18.0",
         "eslint-config-prettier": "^7.2.0",
