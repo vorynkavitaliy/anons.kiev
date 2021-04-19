@@ -8,15 +8,6 @@ const authRoutes = require('./routes/auth.routes')
 const keys = require('./keys')
 const app = express()
 
-let secrets
-if (process.env.NODE_ENV == 'production') {
-    secrets = process.env
-    port = process.env.PORT
-} else {
-    secrets = require('./secrets')
-    port = 5000
-}
-
 mongoose
     .connect(keys.MONGO_URI, {
         useNewUrlParser: true,
@@ -34,7 +25,7 @@ mongoose
 
 app.use(
     cookieSession({
-        secret: secrets.COOKIE_SESSION_SECRET,
+        secret: process.env.NODE_ENV == 'production' ? process.env : '1234',
         maxAge: 1000 * 60 * 60 * 24 * 14,
         httpOnly: true,
         secure: false,
