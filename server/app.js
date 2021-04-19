@@ -2,10 +2,19 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const passport = require('passport')
+const cookieSession = require('cookie-session')
 const passportStrategy = require('./middlewere/passport-strategy')
 const authRoutes = require('./routes/auth.routes')
 const keys = require('./keys')
 const app = express()
+
+if (process.env.NODE_ENV == 'production') {
+    secrets = process.env
+    port = process.env.PORT
+} else {
+    secrets = require('./secrets')
+    port = 5000
+}
 
 mongoose
     .connect(keys.MONGO_URI, {
@@ -21,6 +30,15 @@ mongoose
         console.error('App starting error:', err.stack)
         process.exit(1)
     })
+
+app.use(
+    cookieSession({
+        secret: secrets.COOKIE_SESSION_SECRET,
+        maxAge: 1000 * 60 * 60 * 24 * 14,
+        httpOnly: true,
+        secure: false,
+    })
+)
 
 app.use(passport.initialize())
 passport.use(passportStrategy)

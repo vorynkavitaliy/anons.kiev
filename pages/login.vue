@@ -9,6 +9,16 @@
                         placeholder="Введіть адресу електронної пошти"
                         type="email"
                         required
+                        :show-message="
+                            !valid.email.required || !valid.email.email
+                        "
+                        :error-message="
+                            !valid.email.required
+                                ? 'Email являеться обязятельным полем'
+                                : !valid.email.minLength
+                                ? `Email должен быть в виде example@example.com`
+                                : ''
+                        "
                         class="mb-3"
                     />
 
