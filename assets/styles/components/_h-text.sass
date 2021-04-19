@@ -1,0 +1,41 @@
+.head-1
+    font-size: rem(60px, $fs-ld)
+
+.head-2
+    font-size: rem(52px, $fs-ld)
+
+.head-3
+    +method(font-size, $sxd: rem(19px), $msd: rem(28px, $fs-msd), $ld: rem(48px, $fs-ld))
+
+.head-4
+    font-size: rem(38px, $fs-ld)
+
+.head-5
+    font-size: rem((52px), $fs-ld)
+
+.head-6
+    font-size: rem((52px), $fs-ld)
+
+.head-7
+    font-size: rem((52px), $fs-ld)
+
+.head-1, .head-2, .head-3, .head-4, .head-5, .head-6, .head-7
+    line-height: .9em
+
+    &.bold
+        font-weight: 700
+
+    &.semibold
+        font-weight: 600
+
+    &.medium
+        font-weight: 500
+
+    &.light
+        font-weight: 300
+
+    &.center
+        text-align: center
+
+    &.right
+        text-align: right

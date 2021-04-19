@@ -1,0 +1,11 @@
+.fs
+    @for $i from 12 through 24
+        &-#{$i}
+            font-size: rem($i * 1px)
+
+    @each $device, $width in $dw
+        &-#{$device}
+            @for $i from 12 through 24
+                &-#{$i}
+                    +screen($width)
+                        font-size: rem($i * 1px)
