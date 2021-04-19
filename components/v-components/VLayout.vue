@@ -35,6 +35,7 @@
             around && 'space-around',
             acenter && 'align-center',
         ]"
+        @click="$emit('click')"
     >
         <slot></slot>
     </div>
@@ -52,6 +53,7 @@
             mld && `cols-mld-${mld}`,
             xld && `cols-xld-${xld}`,
         ]"
+        @click="$emit('click')"
     >
         <slot></slot>
     </div>

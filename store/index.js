@@ -19,6 +19,7 @@ export const actions = {
     setSuccess: ({ commit }, payload) => commit('setSuccess', payload),
     clearError: ({ commit }) => commit('clearError'),
     nuxtServerInit: ({ dispatch }) => dispatch('auth/autoLogin'),
+    adminServerInit: ({ dispatch }) => dispatch('admin/autoLogin'),
 }
 
 export const getters = {

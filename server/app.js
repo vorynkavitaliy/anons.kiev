@@ -5,6 +5,8 @@ const passport = require('passport')
 const cookieSession = require('cookie-session')
 const passportStrategy = require('./middlewere/passport-strategy')
 const authRoutes = require('./routes/auth.routes')
+const usersRoutes = require('./routes/user.routes')
+const adminRoutes = require('./routes/admin.routes')
 const keys = require('./keys')
 const app = express()
 
@@ -42,5 +44,7 @@ app.all('/getJSON', (req, res) => {
 })
 
 app.use('/api/auth', authRoutes)
+app.use('/api/users', usersRoutes)
+app.use('/api/admin', adminRoutes)
 
 module.exports = app

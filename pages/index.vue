@@ -1,6 +1,7 @@
 <template>
     <main>
-        <v-container class="pt-10">
+        <v-container class="pt-1">
+            <img class="logo" src="@/assets/images/logo.png" alt="logo" />
             <div class="calc-wrapper m-a p-3">
                 <v-text block class="mb-3"> Дата: {{ date }} </v-text>
                 <v-layout grid xd="2">
@@ -110,7 +111,7 @@ import CopyToClipboard from 'vue-copy-to-clipboard'
 export default {
     name: 'Home',
     components: { CopyToClipboard },
-    middleware: ['admin-auth'],
+    middleware: ['auth'],
     async asyncData({ store }) {
         const { date, currency } = await store.dispatch(
             'currency/fetchPairList'
@@ -173,6 +174,12 @@ export default {
 main
     background-color: rgba(0, 0, 0, 0.6)
     min-height: 100vh
+
+.logo
+    max-width: 240px
+    display: block
+    margin: auto
+
 .calc-wrapper
     background-color: #fff
     max-width: 600px

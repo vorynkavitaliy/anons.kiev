@@ -1,8 +1,6 @@
 <template>
-    <v-layout flex acenter jcenter class="v-modal" v-if="isShow">
-        <v-container>
-            <slot></slot>
-        </v-container>
+    <v-layout v-if="isShow" flex acenter jcenter class="v-modal">
+        <slot></slot>
     </v-layout>
 </template>
 
@@ -25,11 +23,4 @@ export default {
     height: 100%
     top: 0
     left: 0
-
-    .container
-        margin-top: 0
-        margin-bottom: auto
-
-        +screen($dw-msd)
-            margin-top: auto
 </style>

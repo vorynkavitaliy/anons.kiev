@@ -17,14 +17,36 @@ export const actions = {
         commit('setLoading', true, { root: true })
         try {
             const { token } = await this.$axios.$post(
-                '/api/users/login',
+                '/api/admin/login',
                 payload
             )
             dispatch('setToken', token)
             commit('setLoading', false, { root: true })
             commit('setSuccess', 'Вы успешно вошли в аккаунт', { root: true })
+            this.router.push('/admin')
         } catch (e) {
             commit('setError', 'Вы не верно ввели данные', { root: true })
+            commit('setLoading', false, { root: true })
+            throw e
+        }
+    },
+
+    async create({ commit }, payload) {
+        commit('clearError', null, { root: true })
+        commit('setLoading', true, { root: true })
+        try {
+            await this.$axios.$post('/api/admin/create', payload)
+            commit('setLoading', false, { root: true })
+            commit('setSuccess', 'Ви успішно створили користувача', {
+                root: true,
+            })
+            this.$router.push('/admin/users')
+        } catch (e) {
+            commit(
+                'setError',
+                'Ви не вірно ввели дані або користувач з таким E-mail вже э',
+                { root: true }
+            )
             commit('setLoading', false, { root: true })
             throw e
         }
@@ -33,33 +55,13 @@ export const actions = {
     setToken({ commit }, token) {
         this.$axios.setToken(token, 'Bearer')
         commit('setToken', token)
-        Cookies.set('jwt-token', token)
+        Cookies.set('jwt-admin-token', token)
     },
 
     logout({ commit }) {
         this.$axios.setToken(false)
         commit('clearToken')
-        Cookies.remove('jwt-token')
-    },
-
-    async createUser({ commit }, payload) {
-        commit('clearError', null, { root: true })
-        commit('setLoading', true, { root: true })
-        try {
-            await this.$axios.$post('/api/auth/admin/create', payload)
-            commit('setLoading', false, { root: true })
-            commit('setSuccess', 'Вы успешно зарешестрировались', {
-                root: true,
-            })
-        } catch (e) {
-            commit(
-                'setError',
-                'Вы не верно ввели данные или такой email уже существует',
-                { root: true }
-            )
-            commit('setLoading', false, { root: true })
-            throw e
-        }
+        Cookies.remove('jwt-admin-token')
     },
 
     autoLogin({ dispatch }) {

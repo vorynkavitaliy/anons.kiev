@@ -4,21 +4,11 @@
             <div ref="form" class="from-container pv-6 ph-3">
                 <form @submit.prevent="submitLogin">
                     <v-input
-                        v-model="email"
-                        label="Адреса електронної пошти"
-                        placeholder="Введіть адресу електронної пошти"
-                        type="email"
+                        v-model="login"
+                        label="Логін"
+                        placeholder="Логін"
+                        type="text"
                         required
-                        :show-message="
-                            !valid.email.required || !valid.email.email
-                        "
-                        :error-message="
-                            !valid.email.required
-                                ? 'Email являеться обязятельным полем'
-                                : !valid.email.minLength
-                                ? `Email должен быть в виде example@example.com`
-                                : ''
-                        "
                         class="mb-3"
                     />
 
@@ -49,7 +39,7 @@
 </template>
 
 <script>
-import { required, minLength, email } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 export default {
     name: 'Auth',
     data() {
@@ -57,28 +47,22 @@ export default {
             alert: false,
             disableReg: true,
             disableLog: true,
-            email: '',
+            login: '',
             password: '',
 
             valid: {
-                email: {
+                login: {
                     required: true,
-                    email: true,
                 },
                 password: {
                     required: true,
-                    minLength: true,
                 },
             },
         }
     },
 
     validations: {
-        email: { required, email },
-        password: {
-            required,
-            minLength: minLength(6),
-        },
+        login: { required },
     },
 
     computed: {
@@ -105,11 +89,11 @@ export default {
         async submitLogin() {
             try {
                 const formData = {
-                    email: this.email,
+                    login: this.login,
                     password: this.password,
                 }
 
-                await this.$store.dispatch('auth/login', formData)
+                await this.$store.dispatch('admin/login', formData)
                 this.showAlert()
                 this.loading = false
                 this.$router.push('/')
