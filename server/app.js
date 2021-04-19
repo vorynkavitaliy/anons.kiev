@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth.routes')
 const keys = require('./keys')
 const app = express()
 
+let secrets
 if (process.env.NODE_ENV == 'production') {
     secrets = process.env
     port = process.env.PORT

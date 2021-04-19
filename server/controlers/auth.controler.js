@@ -1,11 +1,11 @@
 const bcrypt = require('bcrypt-nodejs')
 const jwt = require('jsonwebtoken')
-// const nodemailer = require('nodemailer')
-// const cryptoRandomString = require('crypto-random-string')
+const nodemailer = require('nodemailer')
+const cryptoRandomString = require('crypto-random-string')
 const keys = require('../keys')
 const User = require('../models/user.model')
-// const Code = require('../models/code.model')
-// const emailService = require('../nodemailer')
+const Code = require('../models/code.model')
+const emailService = require('../nodemailer')
 
 module.exports.login = async (req, res) => {
     const candidate = await User.findOne({ email: req.body.email })
@@ -47,50 +47,50 @@ module.exports.createUser = async (req, res) => {
                 password: bcrypt.hashSync(req.body.password, salt),
             })
 
-            await newUser.save()
-            // const token = jwt.sign(
-            //     {
-            //         email: user.email,
-            //         userId: user._id,
-            //     },
-            //     keys.JWT,
-            //     { expiresIn: 60 * 60 }
-            // )
-            // req.session.token = token
-            // res.json({
-            //     success: true,
-            //     userId: user._id,
-            // })
+            const user = await newUser.save()
+            const token = jwt.sign(
+                {
+                    email: user.email,
+                    userId: user._id,
+                },
+                keys.JWT,
+                { expiresIn: 60 * 60 }
+            )
+            req.session.token = token
+            const baseUrl = req.protocol + '://' + req.get('host')
+            const secretCode = cryptoRandomString({
+                length: 6,
+            })
+            const newCode = new Code({
+                code: secretCode,
+                email: user.email,
+            })
+            await newCode.save()
 
-            // const baseUrl = req.protocol + '://' + req.get('host')
-            // const secretCode = cryptoRandomString({
-            //     length: 6,
-            // })
-            // const newCode = new Code({
-            //     code: secretCode,
-            //     email: user.email,
-            // })
-            // await newCode.save()
+            const data = {
+                from: `YOUR NAME <anonsKiev>`,
+                to: user.email,
+                subject: 'Your Activation Link for YOUR APP',
+                text: `Please use the following link within the next 10 minutes to activate your account on YOUR APP: ${baseUrl}/api/auth/verification/verify-account/${user._id}/${secretCode}`,
+                html: `<p>Please use the following link within the next 10 minutes to activate your account on YOUR APP: <strong><a href="${baseUrl}/api/auth/verification/verify-account/${user._id}/${secretCode}" target="_blank">Email bestätigen</a></strong></p>`,
+            }
+            emailService.sendMail(data, (error, info) => {
+                if (error) {
+                    return console.log(error)
+                }
+                console.log('Message sent: %s', info.messageId)
+                console.log(
+                    'Preview URL: %s',
+                    nodemailer.getTestMessageUrl(info)
+                )
 
-            // const data = {
-            //     from: `YOUR NAME <anonsKiev>`,
-            //     to: user.email,
-            //     subject: 'Your Activation Link for YOUR APP',
-            //     text: `Please use the following link within the next 10 minutes to activate your account on YOUR APP: ${baseUrl}/api/auth/verification/verify-account/${user._id}/${secretCode}`,
-            //     html: `<p>Please use the following link within the next 10 minutes to activate your account on YOUR APP: <strong><a href="${baseUrl}/api/auth/verification/verify-account/${user._id}/${secretCode}" target="_blank">Email bestätigen</a></strong></p>`,
-            // }
-            // emailService.sendMail(data, (error, info) => {
-            //     if (error) {
-            //         return console.log(error)
-            //     }
-            //     console.log('Message sent: %s', info.messageId)
-            //     console.log(
-            //         'Preview URL: %s',
-            //         nodemailer.getTestMessageUrl(info)
-            //     )
+                res.render('contact', { msg: 'Email has been sent' })
+            })
 
-            //     res.render('contact', { msg: 'Email has been sent' })
-            // })
+            res.json({
+                success: true,
+                userId: user._id,
+            })
 
             res.status(200).json({ message: 'Account was created' })
         }
