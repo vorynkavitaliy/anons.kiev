@@ -84,6 +84,7 @@
                     label="Вартість товару"
                     class="mb-2"
                     type="number"
+                    @input="setCurrency"
                 />
 
                 <copy-to-clipboard
