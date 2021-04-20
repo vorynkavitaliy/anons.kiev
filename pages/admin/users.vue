@@ -140,7 +140,7 @@
 <script>
 export default {
     layout: 'admin',
-    middleware: ['admin'],
+    // middleware: ['admin'],
     async asyncData({ store }) {
         const users = await store.dispatch('user/getUsers')
         return {

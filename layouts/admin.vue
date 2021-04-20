@@ -38,4 +38,5 @@ export default {
     background-color: #b6b6b6
     padding: 20px
     width: 100%
+    overflow: auto
 </style>

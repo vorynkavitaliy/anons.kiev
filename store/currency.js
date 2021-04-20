@@ -16,9 +16,12 @@ export const actions = {
         commit('setLoading', true, { root: true })
         try {
             const res = await fetch(api)
-            const data = await res.json()
+            let data = await res.json()
             commit('setCurrencyList', data)
             commit('setLoading', false, { root: true })
+            if (data) {
+                data = data.filter((item) => item.currencyCodeB === 980)
+            }
             return data
         } catch (error) {
             commit('setError', error.message, { root: true })

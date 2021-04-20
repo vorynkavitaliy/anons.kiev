@@ -1,5 +1,5 @@
 <template>
-    <v-layout flex column>
+    <v-layout flex column class="main">
         <h2>Загальні дані</h2>
 
         <v-layout grid md="2" class="data-wrapper offset-2 p-2 mt-3">
@@ -29,14 +29,13 @@
             </div>
             <div>
                 <v-text color="#000">Валюти які використовуються</v-text>
-                <v-layout flex acenter>
+                <v-layout flex acenter wrap>
                     <v-layout
                         v-for="(item, i) of currencyList"
                         :key="i"
                         flex
                         acenter
-                        wrap
-                        class="currency-btn mr-1"
+                        class="currency-btn mr-1 mb-1"
                     >
                         <v-text
                             color="#000"
@@ -78,13 +77,12 @@
 
             <div>
                 <v-text color="#000">Корегування які використовуються</v-text>
-                <v-layout flex acenter>
+                <v-layout flex acenter wrap>
                     <v-layout
                         v-for="item of changesList"
                         :key="item"
                         flex
                         acenter
-                        wrap
                         class="currency-btn mr-1"
                     >
                         <v-text
@@ -127,13 +125,12 @@
 
             <div>
                 <v-text color="#000">Коміссії які використовуються</v-text>
-                <v-layout flex acenter>
+                <v-layout flex acenter wrap>
                     <v-layout
                         v-for="item of comissonList"
                         :key="item"
                         flex
                         acenter
-                        wrap
                         class="currency-btn mr-1"
                     >
                         <v-text
@@ -176,13 +173,12 @@
 
             <div>
                 <v-text color="#000">Надбавки які використовуються</v-text>
-                <v-layout flex acenter>
+                <v-layout flex acenter wrap>
                     <v-layout
                         v-for="item of additiveList"
                         :key="item"
                         flex
                         acenter
-                        wrap
                         class="currency-btn mr-1"
                     >
                         <v-text
@@ -219,7 +215,7 @@
 <script>
 export default {
     layout: 'admin',
-    middleware: ['admin'],
+    // middleware: ['admin'],
     async asyncData({ store }) {
         const currency = await store.dispatch('currency/fetchPairList')
         const currencesFilters = await store.dispatch('currency/fetchCurrences')
@@ -290,6 +286,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+
 .data-wrapper
     background-color: #fff
     border-radius: 8px

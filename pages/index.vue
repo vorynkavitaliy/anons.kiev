@@ -167,7 +167,7 @@ export default {
                 : (+this.currencyList[this.radioCurrency].rateCross).toFixed(2)
             this.rate =
                 +rateSell + this.changeCurrencyList[this.radioChangeCurrency]
-            let result =
+            const result =
                 +this.price.toFixed(2) *
                 +this.rate.toFixed(2) *
                 (
@@ -175,10 +175,7 @@ export default {
                     100
                 ).toFixed(2) *
                 ((100 + this.additiveList[this.radioAdditive]) / 100).toFixed(2)
-            result = result.toString()
-            const index = result.includes('.') ? result.indexOf('.') : false
-            result = result.includes('.') ? result.slice(0, index + 3) : result
-            this.result = result
+            this.result = Math.floor(result)
         },
         setRadio(value, i) {
             this[value] = i

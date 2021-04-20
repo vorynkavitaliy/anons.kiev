@@ -96,7 +96,7 @@ import { required, sameAs, minLength, email } from 'vuelidate/lib/validators'
 
 export default {
     layout: 'admin',
-    middleware: ['admin'],
+    // middleware: ['admin'],
     data() {
         return {
             alert: false,
