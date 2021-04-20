@@ -1,4 +1,4 @@
-const api = `https://boto.agency/api.php?privatBank=1`
+const api = `https://api.monobank.ua/bank/currency`
 
 export const state = () => ({
     currency: [],
@@ -16,17 +16,37 @@ export const actions = {
         commit('setLoading', true, { root: true })
         try {
             const res = await fetch(api)
-            const { date, exchangeRate } = await res.json()
-            const currency = exchangeRate.filter(
-                (item) =>
-                    item.currency === 'USD' ||
-                    item.currency === 'EUR' ||
-                    item.currency === 'GBP' ||
-                    item.currency === 'PLZ'
-            )
-            commit('setCurrencyList', currency)
+            const data = await res.json()
+            commit('setCurrencyList', data)
             commit('setLoading', false, { root: true })
-            return { date, currency }
+            return data
+        } catch (error) {
+            commit('setError', error.message, { root: true })
+            commit('setLoading', false, { root: true })
+            throw error.message
+        }
+    },
+
+    async fetchCurrences({ commit }) {
+        commit('clearError', null, { root: true })
+        commit('setLoading', true, { root: true })
+        try {
+            const res = await this.$axios.$get('/api/currency')
+            commit('setLoading', false, { root: true })
+            return res[0]
+        } catch (error) {
+            commit('setError', error.message, { root: true })
+            commit('setLoading', false, { root: true })
+            throw error.message
+        }
+    },
+
+    async updateCurrences({ commit }, form) {
+        commit('clearError', null, { root: true })
+        commit('setLoading', true, { root: true })
+        try {
+            await this.$axios.$put('/api/currency', form)
+            commit('setLoading', false, { root: true })
         } catch (error) {
             commit('setError', error.message, { root: true })
             commit('setLoading', false, { root: true })

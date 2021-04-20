@@ -7,6 +7,7 @@ const passportStrategy = require('./middlewere/passport-strategy')
 const authRoutes = require('./routes/auth.routes')
 const usersRoutes = require('./routes/user.routes')
 const adminRoutes = require('./routes/admin.routes')
+const currencyRoutes = require('./routes/currency.routes')
 const keys = require('./keys')
 const app = express()
 
@@ -39,12 +40,11 @@ passport.use(passportStrategy)
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.all('/getJSON', (req, res) => {
-    res.json({ data: 'data' })
-})
+app.all('/getJSON', (req, res) => res.json({ data: 'data' }))
 
 app.use('/api/auth', authRoutes)
 app.use('/api/users', usersRoutes)
 app.use('/api/admin', adminRoutes)
+app.use('/api/currency', currencyRoutes)
 
 module.exports = app

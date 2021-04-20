@@ -15,7 +15,7 @@ export default function ({ $axios, redirect, store }) {
     $axios.onError((error) => {
         if (error.response) {
             if (error.response.statis === 401) {
-                redirect('/admin/login?message=session')
+                redirect('/login?message=session')
                 store.dispatch('auth/logout')
             }
 

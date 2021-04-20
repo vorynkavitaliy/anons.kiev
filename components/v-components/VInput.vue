@@ -3,7 +3,6 @@
         <label v-if="label" for="input">{{ label }}</label>
 
         <input
-            @input="$emit('input', $event.target.value)"
             :type="type"
             :required="required"
             :name="name"
@@ -11,6 +10,7 @@
             :value="value"
             :readonly="readonly"
             :step="step"
+            @input="$emit('input', $event.target.value)"
             @click="click"
             @change="change"
             @blur="blur"
@@ -29,9 +29,6 @@ export default {
         event: 'input',
     },
     props: {
-        value: {
-            required: true,
-        },
         label: {
             type: String,
             default: '',

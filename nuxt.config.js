@@ -23,7 +23,12 @@ export default {
         sass: ['@/assets/styles/*.sass'],
     },
 
-    plugins: ['@/plugins/global', '@/plugins/axios', '@/plugins/v-components'],
+    plugins: [
+        '@/plugins/global',
+        '@/plugins/axiosAdmins',
+        '@/plugins/axiosUsers',
+        '@/plugins/v-components',
+    ],
 
     components: true,
 

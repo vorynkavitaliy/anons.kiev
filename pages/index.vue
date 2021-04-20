@@ -1,21 +1,25 @@
 <template>
     <main>
-        <v-container class="pt-1">
+        <v-container class="pt-1 pb-3">
             <img class="logo" src="@/assets/images/logo.png" alt="logo" />
             <div class="calc-wrapper m-a p-3">
-                <v-text block class="mb-3"> Дата: {{ date }} </v-text>
+                <v-text block class="mb-3"> Дата: </v-text>
                 <v-layout grid xd="2">
                     <span
-                        v-for="(item, i) of currency"
+                        v-for="(item, i) of currencyList"
                         :key="i"
                         class="checkbox mb-2"
                         :class="[radioCurrency === i ? 'active' : '']"
                         @click="setRadio('radioCurrency', i)"
                     >
                         <i></i>
-                        {{ item.currency | currency }}
+                        {{ item.currencyCodeA | currency }}
 
-                        ({{ item.saleRateNB.toFixed(2) }})
+                        ({{
+                            item.rateSell
+                                ? (+item.rateSell).toFixed(2)
+                                : (+item.rateCross).toFixed(2)
+                        }})
                     </span>
                 </v-layout>
 
@@ -33,7 +37,7 @@
                 </v-layout>
 
                 <v-text block weight="medium" class="mb-2">
-                    Загальний курс: {{ rate }}
+                    Загальний курс: {{ +rate.toFixed(2) }}
                 </v-text>
 
                 <v-text block weight="bold" class="mb-2">
@@ -100,6 +104,10 @@
                         <v-icon icon="copy" w="20px" color="#000" />
                     </v-layout>
                 </copy-to-clipboard>
+
+                <v-text block center class="mt-3">
+                    <a href="tel:+380952811599">Андрощук В. 0952811599</a>
+                </v-text>
             </div>
         </v-container>
 
@@ -114,12 +122,21 @@ export default {
     components: { CopyToClipboard },
     middleware: ['auth'],
     async asyncData({ store }) {
-        const { date, currency } = await store.dispatch(
-            'currency/fetchPairList'
+        const currencyList = []
+        const { currency, changes, comisson, additive } = await store.dispatch(
+            'currency/fetchCurrences'
         )
+        const db = await store.dispatch('currency/fetchPairList')
+        for (const item of db) {
+            for (const i of currency) {
+                item.currencyCodeA === i && currencyList.push(item)
+            }
+        }
         return {
-            date,
-            currency,
+            currencyList,
+            changeCurrencyList: changes,
+            commissionsList: comisson,
+            additiveList: additive,
         }
     },
     data() {
@@ -132,32 +149,36 @@ export default {
             radioChangeCurrency: 0,
             radioCommissions: 0,
             radioAdditive: 0,
-            changeCurrencyList: [0, 0.2, 0.5, 1],
-            commissionsList: [0, 5, 7, 10, 15],
-            additiveList: [0, 5, 7, 10, 15],
             result: '',
         }
     },
 
     created() {
-        this.rate = this.currency[this.radioCurrency].saleRateNB.toFixed(2)
+        this.rate = this.currencyList[this.radioCurrency].rateSell
+            ? (+this.currencyList[this.radioCurrency].rateSell).toFixed(2)
+            : (+this.currencyList[this.radioCurrency].rateCross).toFixed(2)
         this.setCurrency()
     },
 
     methods: {
         setCurrency() {
-            this.rate = (
-                this.currency[this.radioCurrency].saleRateNB +
-                this.changeCurrencyList[this.radioChangeCurrency]
-            ).toFixed(2)
-
-            const result =
-                +this.price *
-                +this.rate *
-                ((100 - this.commissionsList[this.radioCommissions]) / 100) *
-                ((100 + this.additiveList[this.radioAdditive]) / 100)
-
-            this.result = result.toFixed(2)
+            const rateSell = this.currencyList[this.radioCurrency].rateSell
+                ? (+this.currencyList[this.radioCurrency].rateSell).toFixed(2)
+                : (+this.currencyList[this.radioCurrency].rateCross).toFixed(2)
+            this.rate =
+                +rateSell + this.changeCurrencyList[this.radioChangeCurrency]
+            let result =
+                +this.price.toFixed(2) *
+                +this.rate.toFixed(2) *
+                (
+                    (100 - this.commissionsList[this.radioCommissions]) /
+                    100
+                ).toFixed(2) *
+                ((100 + this.additiveList[this.radioAdditive]) / 100).toFixed(2)
+            result = result.toString()
+            const index = result.includes('.') ? result.indexOf('.') : false
+            result = result.includes('.') ? result.slice(0, index + 3) : result
+            this.result = result
         },
         setRadio(value, i) {
             this[value] = i

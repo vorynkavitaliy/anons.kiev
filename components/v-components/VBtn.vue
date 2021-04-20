@@ -23,8 +23,8 @@
             disable && 'disable',
         ]"
         :style="bg[0] === '#' && `background-color: ${bg}`"
-        @click="handleClick"
         :href="href"
+        @click="handleClick"
     >
         <slot></slot>
     </a>
@@ -39,8 +39,8 @@
             disable && 'disable',
         ]"
         :style="bg[0] === '#' && `background-color: ${bg}`"
-        @click="handleClick"
         :disabled="disable"
+        @click="handleClick"
     >
         <slot></slot>
     </button>

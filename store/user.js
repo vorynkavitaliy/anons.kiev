@@ -79,7 +79,6 @@ export const actions = {
             commit('setSuccess', 'Ви видалил користувача', {
                 root: true,
             })
-            this.$router.push('/admin/users')
         } catch (e) {
             commit('setError', 'Упс... щось пішло не так', { root: true })
             commit('setLoading', false, { root: true })

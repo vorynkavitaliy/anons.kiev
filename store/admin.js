@@ -20,10 +20,11 @@ export const actions = {
                 '/api/admin/login',
                 payload
             )
+            console.log(token)
             dispatch('setToken', token)
             commit('setLoading', false, { root: true })
             commit('setSuccess', 'Вы успешно вошли в аккаунт', { root: true })
-            this.router.push('/admin')
+            this.$router.push('/admin')
         } catch (e) {
             commit('setError', 'Вы не верно ввели данные', { root: true })
             commit('setLoading', false, { root: true })
@@ -70,7 +71,7 @@ export const actions = {
             : this.app.context.req.headers.cookie
 
         const cookies = Cookie.parse(cookieStr || '') || {}
-        const token = cookies['jwt-token'] || ''
+        const token = cookies['jwt-admin-token'] || ''
 
         if (isJWTValid(token)) {
             dispatch('setToken', token)
