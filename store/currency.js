@@ -1,4 +1,4 @@
-const api = `https://api.monobank.ua/bank/currency`
+const api = `https://boto.agency/api.php?monoBank=1`
 
 export const state = () => ({
     currency: [],

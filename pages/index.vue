@@ -3,7 +3,7 @@
         <v-container class="pt-1 pb-3">
             <img class="logo" src="@/assets/images/logo.png" alt="logo" />
             <div class="calc-wrapper m-a p-3">
-                <v-text block class="mb-3"> Дата: </v-text>
+                <!-- <v-text block class="mb-3"> Дата: </v-text> -->
                 <v-layout grid xd="2">
                     <span
                         v-for="(item, i) of currencyList"
@@ -134,6 +134,7 @@ export default {
         }
         return {
             currencyList,
+            cur: currency,
             changeCurrencyList: changes,
             commissionsList: comisson,
             additiveList: additive,
@@ -158,6 +159,19 @@ export default {
             ? (+this.currencyList[this.radioCurrency].rateSell).toFixed(2)
             : (+this.currencyList[this.radioCurrency].rateCross).toFixed(2)
         this.setCurrency()
+    },
+
+    mounted() {
+        setTimeout(() => {
+            const res = []
+            const db = await this.$store.dispatch('currency/fetchPairList')
+            for (const item of db) {
+                for (const i of this.cur) {
+                    item.currencyCodeA === i && res.push(item)
+                }
+            }
+            this.currencyList = res
+        }, 1000 * 60 * 5)
     },
 
     methods: {
