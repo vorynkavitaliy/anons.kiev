@@ -207,8 +207,13 @@
             class="pv-1 ph-6 mt-3 save-btn"
             @click="updateFilters"
         >
-            Зберегти
+            <span v-if="!loading">Зберегти</span>
+            <v-loader v-else size="20" />
         </v-btn>
+
+        <v-alert v-show="alert" :type="error ? 'error' : 'success'">
+            {{ error ? error : success }}
+        </v-alert>
     </v-layout>
 </template>
 
@@ -226,6 +231,7 @@ export default {
     },
     data() {
         return {
+            alert: false,
             showList: false,
             currencyList: [],
             changesList: [],
@@ -235,6 +241,20 @@ export default {
             changeComission: 0,
             changeAdditive: 0,
         }
+    },
+
+    computed: {
+        loading() {
+            return this.$store.getters.loading
+        },
+
+        error() {
+            return this.$store.getters.error
+        },
+
+        success() {
+            return this.$store.getters.success
+        },
     },
 
     created() {
@@ -254,6 +274,7 @@ export default {
             }
 
             await this.$store.dispatch('currency/updateCurrences', formData)
+            this.showAlert()
         },
         openList() {
             const dropdownList = this.$refs['dropdown-list']
@@ -280,6 +301,12 @@ export default {
         removeCurrency(list, item) {
             const i = this[list].indexOf(item)
             this[list].splice(i, 1)
+        },
+
+        showAlert() {
+            this.alert = true
+
+            setTimeout(() => (this.alert = false), 1500)
         },
     },
 }

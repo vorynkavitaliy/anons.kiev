@@ -36,6 +36,7 @@ export const actions = {
         try {
             const res = await this.$axios.$get('/api/currency')
             commit('setLoading', false, { root: true })
+            commit('setSuccess', 'Ви успішно зберегли зміни', { root: true })
             return res[0]
         } catch (error) {
             commit('setError', error.message, { root: true })
