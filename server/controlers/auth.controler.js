@@ -48,49 +48,49 @@ module.exports.createUser = async (req, res) => {
             })
 
             const user = await newUser.save()
-            const token = jwt.sign(
+            jwt.sign(
                 {
                     email: user.email,
                     userId: user._id,
                 },
                 keys.JWT,
-                { expiresIn: 60 * 60 }
+                { expiresIn: 60 * 60 * 12 * 30 }
             )
-            req.session.token = token
-            const baseUrl = req.protocol + '://' + req.get('host')
-            const secretCode = cryptoRandomString({
-                length: 6,
-            })
-            const newCode = new Code({
-                code: secretCode,
-                email: user.email,
-            })
-            await newCode.save()
+            // req.session.token = token
+            // const baseUrl = req.protocol + '://' + req.get('host')
+            // const secretCode = cryptoRandomString({
+            //     length: 6,
+            // })
+            // const newCode = new Code({
+            //     code: secretCode,
+            //     email: user.email,
+            // })
+            // await newCode.save()
 
-            const data = {
-                from: `YOUR NAME <anonsKiev>`,
-                to: user.email,
-                subject: 'Your Activation Link for YOUR APP',
-                text: `Please use the following link within the next 10 minutes to activate your account on YOUR APP: ${baseUrl}/api/auth/verification/verify-account/${user._id}/${secretCode}`,
-                html: `<p>Please use the following link within the next 10 minutes to activate your account on YOUR APP: <strong><a href="${baseUrl}/api/auth/verification/verify-account/${user._id}/${secretCode}" target="_blank">Email bestätigen</a></strong></p>`,
-            }
-            emailService.sendMail(data, (error, info) => {
-                if (error) {
-                    return console.log(error)
-                }
-                console.log('Message sent: %s', info.messageId)
-                console.log(
-                    'Preview URL: %s',
-                    nodemailer.getTestMessageUrl(info)
-                )
+            // const data = {
+            //     from: `YOUR NAME <anonsKiev>`,
+            //     to: user.email,
+            //     subject: 'Your Activation Link for YOUR APP',
+            //     text: `Please use the following link within the next 10 minutes to activate your account on YOUR APP: ${baseUrl}/api/auth/verification/verify-account/${user._id}/${secretCode}`,
+            //     html: `<p>Please use the following link within the next 10 minutes to activate your account on YOUR APP: <strong><a href="${baseUrl}/api/auth/verification/verify-account/${user._id}/${secretCode}" target="_blank">Email bestätigen</a></strong></p>`,
+            // }
+            // emailService.sendMail(data, (error, info) => {
+            //     if (error) {
+            //         return console.log(error)
+            //     }
+            //     console.log('Message sent: %s', info.messageId)
+            //     console.log(
+            //         'Preview URL: %s',
+            //         nodemailer.getTestMessageUrl(info)
+            //     )
 
-                res.render('contact', { msg: 'Email has been sent' })
-            })
+            //     res.render('contact', { msg: 'Email has been sent' })
+            // })
 
-            res.json({
-                success: true,
-                userId: user._id,
-            })
+            // res.json({
+            //     success: true,
+            //     userId: user._id,
+            // })
 
             res.status(200).json({ message: 'Account was created' })
         }

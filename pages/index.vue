@@ -162,7 +162,7 @@ export default {
     },
 
     mounted() {
-        setTimeout(() => {
+        setTimeout(async () => {
             const res = []
             const db = await this.$store.dispatch('currency/fetchPairList')
             for (const item of db) {

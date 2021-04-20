@@ -7,7 +7,6 @@
             :required="required"
             :name="name"
             :placeholder="placeholder"
-            :value="value"
             :readonly="readonly"
             :step="step"
             @input="$emit('input', $event.target.value)"
