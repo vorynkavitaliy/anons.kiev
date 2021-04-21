@@ -9,6 +9,7 @@
             :placeholder="placeholder"
             :readonly="readonly"
             :step="step"
+            :value="val"
             @input="$emit('input', $event.target.value)"
             @click="click"
             @change="change"
@@ -29,6 +30,11 @@ export default {
     },
     props: {
         label: {
+            type: String,
+            default: '',
+        },
+
+        val: {
             type: String,
             default: '',
         },

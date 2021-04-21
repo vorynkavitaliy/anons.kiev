@@ -12,9 +12,9 @@ module.exports.getCurrences = async (req, res) => {
 module.exports.updateCurrences = async (req, res) => {
     const date = {
         currency: req.body.currency,
-        changes: req.body.changes,
-        comisson: req.body.comisson,
-        additive: req.body.additive,
+        changes: req.body.changes.sort((a, b) => a - b),
+        comisson: req.body.comisson.sort((a, b) => a - b),
+        additive: req.body.additive.sort((a, b) => a - b),
     }
     try {
         const currences = await Currency.findOneAndUpdate(

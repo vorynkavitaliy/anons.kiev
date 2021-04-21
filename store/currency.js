@@ -1,4 +1,4 @@
-const api = `https://boto.agency/api.php?monoBank=1`
+const api = `https://boto.agency/api.php?boto=1`
 
 export const state = () => ({
     currency: [],
@@ -16,13 +16,11 @@ export const actions = {
         commit('setLoading', true, { root: true })
         try {
             const res = await fetch(api)
-            let data = await res.json()
-            commit('setCurrencyList', data)
+            if (!res.ok) return
+            const rate = await res.json()
+            commit('setCurrencyList', rate)
             commit('setLoading', false, { root: true })
-            if (data) {
-                data = data.filter((item) => item.currencyCodeB === 980)
-            }
-            return data
+            return rate
         } catch (error) {
             commit('setError', error.message, { root: true })
             commit('setLoading', false, { root: true })

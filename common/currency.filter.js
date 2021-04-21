@@ -1,27 +1,27 @@
 export default function (value) {
     switch (value) {
-        case 840:
+        case 840 && 'USD':
             return 'Доллар'
 
-        case 985:
+        case 985 && 'PLN':
             return 'Злотый'
 
-        case 978:
+        case 978 && 'EUR':
             return 'Евро'
 
-        case 826:
+        case 826 && 'GBP':
             return 'Фунт'
 
-        case 643:
+        case 643 && 'RUB':
             return 'Российский рубль'
 
-        case 756:
+        case 756 && 'CHF':
             return 'Швейцарский франк'
 
-        case 392:
+        case 392 && 'JPY':
             return 'Японская йена'
 
-        case 156:
+        case 156 && 'CNY':
             return 'Китайский юань женьминьби'
 
         case 784:
@@ -45,7 +45,7 @@ export default function (value) {
         case 36:
             return 'Австралийский доллар'
 
-        case 944:
+        case 944 && 'AZN':
             return 'Азербайджанский манат'
 
         case 50:
@@ -72,10 +72,10 @@ export default function (value) {
         case 72:
             return 'Ботсванская пула'
 
-        case 933:
+        case 933 && 'BYN':
             return 'Белорусский рубль'
 
-        case 124:
+        case 124 && 'CAD':
             return 'Канадский доллар'
 
         case 976:
@@ -93,13 +93,13 @@ export default function (value) {
         case 192:
             return 'Кубинский песо'
 
-        case 203:
+        case 203 && 'CZK':
             return 'Чешская крона'
 
         case 262:
             return 'Джибутийский франк'
 
-        case 208:
+        case 208 && 'DKK':
             return 'Датская крона'
 
         case 12:
@@ -111,7 +111,7 @@ export default function (value) {
         case 230:
             return 'Эфиопский быр'
 
-        case 981:
+        case 981 && 'GEL':
             return 'Грузинский лари'
 
         case 936:
@@ -126,11 +126,11 @@ export default function (value) {
             return 'Гонконгский доллар'
         case 191:
             return 'Хорватская куна'
-        case 348:
+        case 348 && 'HUF':
             return 'Венгерский форинт'
         case 360:
             return 'Индонезийская рупия'
-        case 376:
+        case 376 && 'ILS':
             return 'Израильский шекель'
         case 356:
             return 'Индийская рупия'
@@ -155,7 +155,7 @@ export default function (value) {
             return 'Южно-корейская вона (Корея)'
         case 414:
             return 'Кувейтский динар'
-        case 398:
+        case 398 && 'KZT':
             return 'Казахский тенге'
         case 418:
             return 'Лаосский кип'
@@ -168,7 +168,7 @@ export default function (value) {
             return 'Ливийский динар'
         case 504:
             return 'Марокканский дирхам'
-        case 498:
+        case 498 && 'MDL':
             return 'Молдовский лей'
         case 969:
             return 'Малагасийский ариари'
@@ -201,7 +201,7 @@ export default function (value) {
             return 'Нигерийская наира'
         case 558:
             return 'Никарагуанская кордоба'
-        case 578:
+        case 578 && 'NOK':
             return 'Норвежская крона'
         case 524:
             return 'Непальская рупия'
@@ -230,9 +230,9 @@ export default function (value) {
             return 'Сейшельская рупия'
         case 938:
             return 'Суданский фунт'
-        case 752:
+        case 752 && 'SEK':
             return 'Шведская крона'
-        case 702:
+        case 702 && 'SGD':
             return 'Сингапурский доллар'
 
         case 694:
@@ -253,11 +253,11 @@ export default function (value) {
         case 972:
             return 'Таджикский сомони'
 
-        case 795:
+        case 795 && 'TMT':
             return 'Туркменский манат'
         case 788:
             return 'Тунисский динар'
-        case 949:
+        case 949 && 'TRY':
             return 'Новая турецкая лира'
         case 901:
             return 'Тайваньский доллар'
@@ -277,7 +277,7 @@ export default function (value) {
         case 950:
             return 'Франк КФА (Центральная Африка)'
 
-        case 960:
+        case 960 && 'UZS':
             return 'СПЗ'
         case 952:
             return 'Франк КФА (Западная Африка)	'

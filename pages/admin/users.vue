@@ -65,6 +65,7 @@
                     type="text"
                     placeholder="Введіть ім'я користувача"
                     required
+                    :val="firstName"
                     class="mb-3"
                 />
 
@@ -74,6 +75,7 @@
                     type="text"
                     placeholder="Введіть прізвище користувача"
                     required
+                    :val="lastName"
                     class="mb-3"
                 />
 
@@ -83,6 +85,7 @@
                     type="email"
                     placeholder="Введіть адресу електронної пошти"
                     required
+                    :val="email"
                     class="mb-3"
                 />
 

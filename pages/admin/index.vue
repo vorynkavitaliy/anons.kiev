@@ -8,20 +8,17 @@
 
                 <div class="dropdown-block">
                     <span class="current-link" @click="openList">
-                        {{ currency[0].currencyCodeA | currency }}
+                        {{ currency[0].currency | currency }}
                     </span>
                     <ul ref="dropdown-list" class="dropdown-list">
                         <li
                             v-for="(item, i) of currency"
                             :key="i"
                             class="dropdown-item"
-                            @click="pushToCurrencyList(item.currencyCodeA)"
+                            @click="pushToCurrencyList(item.currency)"
                         >
                             <span class="dropdown-link">
-                                {{
-                                    item.currencyCodeA &&
-                                    item.currencyCodeA | currency
-                                }}
+                                {{ item.currency && item.currency | currency }}
                             </span>
                         </li>
                     </ul>
@@ -295,6 +292,7 @@ export default {
 
         pushToList(list, value) {
             this[list].push(this[value])
+            this[list].sort((a, b) => a - b)
             this[value] = ''
         },
 

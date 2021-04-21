@@ -6,7 +6,7 @@ const dataSchema = new Schema({
         default: 1,
     },
 
-    currency: [Number],
+    currency: [String],
 
     changes: [Number],
 
