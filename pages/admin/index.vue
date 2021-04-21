@@ -80,7 +80,7 @@
                         :key="item"
                         flex
                         acenter
-                        class="currency-btn mr-1"
+                        class="currency-btn mr-1 mb-1"
                     >
                         <v-text
                             color="#000"
@@ -103,7 +103,7 @@
             </div>
 
             <div>
-                <v-text color="#000">Коміссія (-%)</v-text>
+                <v-text color="#000">Знижка (-%)</v-text>
                 <v-input
                     v-model="changeComission"
                     setp="0.1"
@@ -121,14 +121,14 @@
             </div>
 
             <div>
-                <v-text color="#000">Коміссії які використовуються</v-text>
+                <v-text color="#000">Знижка яка використовуються</v-text>
                 <v-layout flex acenter wrap>
                     <v-layout
                         v-for="item of comissonList"
                         :key="item"
                         flex
                         acenter
-                        class="currency-btn mr-1"
+                        class="currency-btn mr-1 mb-1"
                     >
                         <v-text
                             color="#000"
@@ -151,7 +151,7 @@
             </div>
 
             <div>
-                <v-text color="#000">Надбавка (+%)</v-text>
+                <v-text color="#000">Коімісія (+%)</v-text>
                 <v-input
                     v-model="changeAdditive"
                     setp="0.1"
@@ -169,14 +169,14 @@
             </div>
 
             <div>
-                <v-text color="#000">Надбавки які використовуються</v-text>
+                <v-text color="#000">Коімісія яка використовуються</v-text>
                 <v-layout flex acenter wrap>
                     <v-layout
                         v-for="item of additiveList"
                         :key="item"
                         flex
                         acenter
-                        class="currency-btn mr-1"
+                        class="currency-btn mr-1 mb-1"
                     >
                         <v-text
                             color="#000"

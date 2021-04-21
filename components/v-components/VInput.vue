@@ -35,7 +35,6 @@ export default {
         },
 
         val: {
-            type: String,
             default: '',
         },
 

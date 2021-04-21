@@ -2,8 +2,8 @@
     <main>
         <v-container class="pt-1 pb-3">
             <img class="logo" src="@/assets/images/logo.png" alt="logo" />
-            <div class="calc-wrapper m-a p-3" v-if="currencyList">
-                <v-text block class="mb-3"> Дата: </v-text>
+            <div class="calc-wrapper m-a p-3">
+                <!-- <v-text block class="mb-3"> Дата: </v-text> -->
                 <v-layout grid xd="2">
                     <span
                         v-for="(item, i) of currencyList"
@@ -36,9 +36,7 @@
                     Загальний курс: {{ rate.toFixed(2) }}
                 </v-text>
 
-                <v-text block weight="bold" class="mb-2">
-                    Комісія (-%):
-                </v-text>
+                <v-text block weight="bold" class="mb-2"> Знижка (-%): </v-text>
 
                 <v-layout flex acenter wrap class="mb-2">
                     <span
@@ -54,7 +52,7 @@
                 </v-layout>
 
                 <v-text block weight="bold" class="mb-2">
-                    Надбавка (+%):
+                    Комісія (+%):
                 </v-text>
 
                 <v-layout flex acenter wrap class="mb-2">
@@ -158,7 +156,7 @@ export default {
     },
 
     mounted() {
-        setTimeout(async () => {
+        setInterval(async () => {
             const res = []
             const db = await this.$store.dispatch('currency/fetchPairList')
             for (const item of db) {
