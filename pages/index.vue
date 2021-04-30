@@ -38,7 +38,15 @@
 
                 <v-text block weight="bold" class="mb-2"> Знижка (-%): </v-text>
 
-                <v-layout flex acenter wrap class="mb-2">
+                <v-input
+                    v-model="commissions"
+                    class="mb-2"
+                    type="number"
+                    :val="commissions"
+                    @input="setCurrency"
+                />
+
+                <!-- <v-layout flex acenter wrap class="mb-2">
                     <span
                         v-for="(item, i) of commissionsList"
                         :key="i"
@@ -49,7 +57,7 @@
                         <i></i>
                         {{ item }}%
                     </span>
-                </v-layout>
+                </v-layout> -->
 
                 <v-text block weight="bold" class="mb-2">
                     Комісія (+%):
@@ -118,9 +126,7 @@ export default {
     middleware: ['auth'],
     async asyncData({ store }) {
         const currencyList = []
-        const { currency, changes, comisson, additive } = await store.dispatch(
-            'currency/fetchCurrences'
-        )
+        const { currency } = await store.dispatch('currency/fetchCurrences')
         const db = await store.dispatch('currency/fetchPairList')
         if (!db) return
         for (const item of db) {
@@ -130,10 +136,6 @@ export default {
         }
         return {
             currencyList,
-            cur: currency,
-            changeCurrencyList: changes,
-            commissionsList: comisson,
-            additiveList: additive,
         }
     },
     data() {
@@ -142,6 +144,7 @@ export default {
             alert: false,
             delivery: false,
             price: 100,
+            commissions: 20,
             radioCurrency: 0,
             radioChangeCurrency: 0,
             radioCommissions: 0,
@@ -150,21 +153,49 @@ export default {
         }
     },
 
+    computed: {
+        cur() {
+            return this.$store.getters['currency/currences'].currency
+        },
+
+        changeCurrencyList() {
+            return this.$store.getters['currency/currences'].changes
+        },
+
+        commissionsList() {
+            return this.$store.getters['currency/currences'].comisson
+        },
+
+        additiveList() {
+            return this.$store.getters['currency/currences'].additive
+        },
+    },
+
     created() {
         this.rate = this.currencyList[this.radioCurrency].saleRate
         this.setCurrency()
     },
 
-    mounted() {
-        setInterval(async () => {
+    watch: {
+        currencyList() {
             const res = []
-            const db = await this.$store.dispatch('currency/fetchPairList')
+            const db = this.$store.getters['currency/currency']
             for (const item of db) {
                 for (const i of this.cur) {
                     item.currency === i && res.push(item)
                 }
             }
-            this.currencyList = res
+            return res
+        },
+    },
+
+    mounted() {
+        setInterval(async () => {
+            await this.$store.dispatch('currency/fetchPairList')
+        }, 1000 * 60)
+
+        setInterval(async () => {
+            await this.$store.dispatch('currency/fetchCurrences')
         }, 1000 * 60 * 5)
     },
 
@@ -175,10 +206,7 @@ export default {
             const result =
                 +this.price *
                 +this.rate.toFixed(2) *
-                (
-                    (100 - this.commissionsList[this.radioCommissions]) /
-                    100
-                ).toFixed(2) *
+                ((100 - this.commissions) / 100).toFixed(2) *
                 ((100 + this.additiveList[this.radioAdditive]) / 100).toFixed(2)
             this.result = Math.ceil(result)
         },
@@ -225,6 +253,7 @@ main
         margin-right: 8px
 
 .checkbox
+    width: fit-content
     &.active
         i
             background-color: $success

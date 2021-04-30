@@ -10,6 +10,8 @@
             :readonly="readonly"
             :step="step"
             :value="val"
+            :min="min"
+            :max="max"
             @input="$emit('input', $event.target.value)"
             @click="click"
             @change="change"
@@ -76,6 +78,16 @@ export default {
         step: {
             type: Number,
             default: 1,
+        },
+
+        min: {
+            type: Number,
+            default: 0,
+        },
+
+        max: {
+            type: Number,
+            default: 100,
         },
     },
 

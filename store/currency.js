@@ -2,12 +2,14 @@ const api = `https://boto.agency/api.php?boto=1`
 
 export const state = () => ({
     currency: [],
+    currences: [],
     currencyPair: null,
 })
 
 export const mutations = {
     setCurrencyList: (state, payload) => (state.currency = payload),
     setCurrencyPair: (state, payload) => (state.currencyPair = payload),
+    setCurrences: (state, payload) => (state.currences = payload),
 }
 
 export const actions = {
@@ -33,6 +35,7 @@ export const actions = {
         commit('setLoading', true, { root: true })
         try {
             const res = await this.$axios.$get('/api/currency')
+            commit('setCurrences', res[0])
             commit('setLoading', false, { root: true })
             commit('setSuccess', 'Ви успішно зберегли зміни', { root: true })
             return res[0]
@@ -59,4 +62,5 @@ export const actions = {
 
 export const getters = {
     currency: (state) => state.currency,
+    currences: (state) => state.currences,
 }
