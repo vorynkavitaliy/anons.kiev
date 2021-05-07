@@ -13,9 +13,26 @@
                         @click="setRadio('radioCurrency', i)"
                     >
                         <i></i>
-                        {{ item.currency | currency }}
+                        <template
+                            v-if="
+                                item.currency == 'GBP' || item.currency == 'PLN'
+                            "
+                        >
+                            <v-input
+                                v-model="inputCurrency"
+                                type="text"
+                                class="mb-2"
+                                :placeholder="item.currency | currency"
+                                @input="
+                                    setRadio('radioCurrency', inputCurrency)
+                                "
+                            />
+                        </template>
+                        <template v-else>
+                            {{ item.currency | currency }}
 
-                        ({{ item.saleRate.toFixed(2) }})
+                            ({{ item.saleRate.toFixed(2) }})
+                        </template>
                     </span>
                 </v-layout>
 
@@ -120,9 +137,10 @@
 
 <script>
 import CopyToClipboard from 'vue-copy-to-clipboard'
+import VInput from '~/components/v-components/VInput'
 export default {
     name: 'Home',
-    components: { CopyToClipboard },
+    components: { VInput, CopyToClipboard },
     middleware: ['auth'],
     async asyncData({ store }) {
         const currencyList = []
@@ -145,7 +163,8 @@ export default {
             delivery: false,
             price: 100,
             commissions: 20,
-            radioCurrency: 0,
+            inputCurrency: 0,
+            radioCurrency: 2,
             radioChangeCurrency: 0,
             radioCommissions: 0,
             radioAdditive: 0,
@@ -201,14 +220,22 @@ export default {
 
     methods: {
         setCurrency() {
-            this.rate = this.currencyList[this.radioCurrency].saleRate
+            if (this.currencyList[this.radioCurrency]) {
+                this.rate = this.currencyList[this.radioCurrency].saleRate
+            } else {
+                this.rate = parseFloat(this.radioCurrency)
+            }
             this.rate += this.changeCurrencyList[this.radioChangeCurrency]
             const result =
                 +this.price *
                 +this.rate.toFixed(2) *
                 ((100 - this.commissions) / 100).toFixed(2) *
                 ((100 + this.additiveList[this.radioAdditive]) / 100).toFixed(2)
-            this.result = Math.ceil(result)
+            if (result) {
+                this.result = Math.ceil(result)
+            } else {
+                this.result = 0
+            }
         },
         setRadio(value, i) {
             this[value] = i
