@@ -10,7 +10,7 @@
                         :key="i"
                         class="checkbox mb-2"
                         :class="[radioCurrency === i ? 'active' : '']"
-                        @click="setRadio('radioCurrency', i)"
+                        @click="setRadio('radioCurrency', i, item.currency)"
                     >
                         <i></i>
                         <template
@@ -24,7 +24,11 @@
                                 class="mb-2"
                                 :placeholder="item.currency | currency"
                                 @input="
-                                    setRadio('radioCurrency', inputCurrency)
+                                    setRadio(
+                                        'radioCurrency',
+                                        inputCurrency,
+                                        item.currency
+                                    )
                                 "
                             />
                         </template>
@@ -53,7 +57,7 @@
                     Загальний курс: {{ rate.toFixed(2) }}
                 </v-text>
 
-                <v-text block weight="bold" class="mb-2"> Знижка (-%): </v-text>
+                <v-text block weight="bold" class="mb-2"> Знижка (-%):</v-text>
 
                 <v-input
                     v-model="commissions"
@@ -118,8 +122,24 @@
                     <v-layout flex acenter class="copy-link">
                         <v-text block weight="bold" class="mr-1">
                             Всього: {{ result }}грн
-                            {{ delivery ? '+ вес' : '' }}</v-text
-                        >
+                            {{ delivery ? '+ вес' : '' }}
+                        </v-text>
+
+                        <v-icon icon="copy" w="20px" color="#000" />
+                    </v-layout>
+                </copy-to-clipboard>
+
+                <copy-to-clipboard
+                    :text="`${resultOfCurrency}${this.currency} ${
+                        delivery ? '+ вес' : ''
+                    }`"
+                    @copy="handleCopy"
+                >
+                    <v-layout flex acenter class="copy-link">
+                        <v-text block weight="bold" class="mr-1">
+                            Всього: {{ resultOfCurrency }}{{ this.currency }}
+                            {{ delivery ? '+ вес' : '' }}
+                        </v-text>
 
                         <v-icon icon="copy" w="20px" color="#000" />
                     </v-layout>
@@ -138,6 +158,7 @@
 <script>
 import CopyToClipboard from 'vue-copy-to-clipboard'
 import VInput from '~/components/v-components/VInput'
+
 export default {
     name: 'Home',
     components: { VInput, CopyToClipboard },
@@ -165,10 +186,12 @@ export default {
             commissions: 20,
             inputCurrency: 0,
             radioCurrency: 2,
+            currency: 'USD',
             radioChangeCurrency: 0,
             radioCommissions: 0,
             radioAdditive: 0,
             result: '',
+            resultOfCurrency: '',
         }
     },
 
@@ -190,11 +213,6 @@ export default {
         },
     },
 
-    created() {
-        this.rate = this.currencyList[this.radioCurrency].saleRate
-        this.setCurrency()
-    },
-
     watch: {
         currencyList() {
             const res = []
@@ -206,6 +224,11 @@ export default {
             }
             return res
         },
+    },
+
+    created() {
+        this.rate = this.currencyList[this.radioCurrency].saleRate
+        this.setCurrency()
     },
 
     mounted() {
@@ -236,8 +259,14 @@ export default {
             } else {
                 this.result = 0
             }
+            this.resultOfCurrency = 100 - 100 * 0.02 + 100 * 0.01
         },
-        setRadio(value, i) {
+        setRadio(value, i, name = null) {
+            if (value === 'radioCurrency') {
+                console.log(name)
+                this.currency = name
+            }
+
             this[value] = i
             this.setCurrency()
         },
@@ -281,10 +310,12 @@ main
 
 .checkbox
     width: fit-content
+
     &.active
         i
             background-color: $success
             border: 1px solid $success
+
             &::after
                 opacity: 1
 
@@ -308,6 +339,7 @@ main
     &.active
         i
             border: 4px solid $success
+
     i
         border-radius: 50%
 
