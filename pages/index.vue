@@ -114,36 +114,38 @@
                     :val="price"
                     @input="setCurrency"
                 />
+                <v-layout grid xd="2">
+                    <copy-to-clipboard
+                        :text="`${result}грн ${delivery ? '+ вес' : ''}`"
+                        @copy="handleCopy"
+                    >
+                        <v-layout flex acenter class="copy-link">
+                            <v-text block weight="bold" class="mr-1">
+                                Всього: {{ result }}грн
+                                {{ delivery ? '+ вес' : '' }}
+                            </v-text>
 
-                <copy-to-clipboard
-                    :text="`${result}грн ${delivery ? '+ вес' : ''}`"
-                    @copy="handleCopy"
-                >
-                    <v-layout flex acenter class="copy-link">
-                        <v-text block weight="bold" class="mr-1">
-                            Всього: {{ result }}грн
-                            {{ delivery ? '+ вес' : '' }}
-                        </v-text>
+                            <v-icon icon="copy" w="20px" color="#000" />
+                        </v-layout>
+                    </copy-to-clipboard>
 
-                        <v-icon icon="copy" w="20px" color="#000" />
-                    </v-layout>
-                </copy-to-clipboard>
+                    <copy-to-clipboard
+                        :text="`${resultOfCurrency}${this.currency} ${
+                            delivery ? '+ вес' : ''
+                        }`"
+                        @copy="handleCopy"
+                    >
+                        <v-layout flex acenter class="copy-link">
+                            <v-text block weight="bold" class="mr-1">
+                                Всього: {{ resultOfCurrency
+                                }}{{ this.currencies[this.currency] }}
+                                {{ delivery ? '+ вес' : '' }}
+                            </v-text>
 
-                <copy-to-clipboard
-                    :text="`${resultOfCurrency}${this.currency} ${
-                        delivery ? '+ вес' : ''
-                    }`"
-                    @copy="handleCopy"
-                >
-                    <v-layout flex acenter class="copy-link">
-                        <v-text block weight="bold" class="mr-1">
-                            Всього: {{ resultOfCurrency }}{{ this.currency }}
-                            {{ delivery ? '+ вес' : '' }}
-                        </v-text>
-
-                        <v-icon icon="copy" w="20px" color="#000" />
-                    </v-layout>
-                </copy-to-clipboard>
+                            <v-icon icon="copy" w="20px" color="#000" />
+                        </v-layout>
+                    </copy-to-clipboard>
+                </v-layout>
 
                 <v-text block center class="mt-3">
                     <a href="tel:+380952811599">Андрощук В. 0952811599</a>
@@ -192,6 +194,12 @@ export default {
             radioAdditive: 0,
             result: '',
             resultOfCurrency: '',
+            currencies: {
+                USD: '$',
+                EUR: '€',
+                GBP: '£',
+                PLN: 'zł',
+            },
         }
     },
 
@@ -259,7 +267,8 @@ export default {
             } else {
                 this.result = 0
             }
-            this.resultOfCurrency = 100 - 100 * 0.02 + 100 * 0.01
+            this.resultOfCurrency =
+                this.price - this.price * this.commissions + this.price * 0.01
         },
         setRadio(value, i, name = null) {
             if (value === 'radioCurrency') {
