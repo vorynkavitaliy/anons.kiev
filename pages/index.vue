@@ -130,9 +130,10 @@
                     </copy-to-clipboard>
 
                     <copy-to-clipboard
-                        :text="`${resultOfCurrency}${this.currency} ${
-                            delivery ? '+ вес' : ''
-                        }`"
+                        :text="`${resultOfCurrency}${
+                            this.currencies[this.currency]
+                        }
+                            ${delivery ? '+ вес' : ''}`"
                         @copy="handleCopy"
                     >
                         <v-layout flex acenter class="copy-link">
@@ -268,7 +269,9 @@ export default {
                 this.result = 0
             }
             this.resultOfCurrency =
-                this.price - this.price * this.commissions + this.price * 0.01
+                this.price -
+                this.price * (this.commissions / 100) +
+                this.price * (this.radioAdditive / 100)
         },
         setRadio(value, i, name = null) {
             if (value === 'radioCurrency') {
