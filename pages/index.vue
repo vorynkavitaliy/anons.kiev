@@ -132,8 +132,7 @@
                     <copy-to-clipboard
                         :text="`${resultOfCurrency}${
                             this.currencies[this.currency]
-                        }
-                            ${delivery ? '+ вес' : ''}`"
+                        }${delivery ? '+ вес' : ''}`"
                         @copy="handleCopy"
                     >
                         <v-layout flex acenter class="copy-link">
