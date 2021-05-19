@@ -5,28 +5,25 @@
             <div class="calc-wrapper m-a p-3">
                 <!-- <v-text block class="mb-3"> Дата: </v-text> -->
                 <v-layout grid xd="2">
-                    <template v-for="(item, i) of currencyList">
+                    <template v-for="(item, i) of rate">
                         <v-layout
-                            v-if="
-                                item.currency == 'GBP' || item.currency == 'PLN'
-                            "
-                            flex
+                            v-if="item.type == 'GBP' || item.type == 'PLN'"
                             :key="i"
+                            flex
+                            acenter
                         >
                             <span
                                 class="checkbox mb-2"
                                 :class="[radioCurrency === i ? 'active' : '']"
-                                @click="
-                                    setRadio('radioCurrency', i, item.currency)
-                                "
+                                @click="setRadio('radioCurrency', i, item.type)"
                             >
                                 <i></i>
                             </span>
                             <v-input
-                                v-model="inputValuta[i].currency"
-                                type="text"
+                                v-model="rate[i].rate"
+                                type="number"
                                 class="mb-2"
-                                :placeholder="item.currency | currency"
+                                :placeholder="item.type | currency"
                                 @input="setCurrency"
                             />
                         </v-layout>
@@ -39,8 +36,8 @@
                             @click="setRadio('radioCurrency', i, item.currency)"
                         >
                             <i></i>
-                            {{ item.currency | currency }}
-                            ({{ item.saleRate.toFixed(2) }})
+                            {{ item.type | currency }}
+                            ({{ item.rate.toFixed(2) }})
                         </span>
                     </template>
                 </v-layout>
@@ -59,7 +56,7 @@
                 </v-layout>
 
                 <v-text block weight="medium" class="mb-2">
-                    Загальний курс: {{ rate.toFixed(2) }}
+                    Загальний курс: {{ rateResult.toFixed(2) }}
                 </v-text>
 
                 <v-text block weight="bold" class="mb-2"> Знижка (-%):</v-text>
@@ -119,6 +116,7 @@
                     :val="price"
                     @input="setCurrency"
                 />
+
                 <v-layout grid xd="2">
                     <copy-to-clipboard
                         :text="`${result}грн ${delivery ? '+ вес' : ''}`"
@@ -186,7 +184,8 @@ export default {
     },
     data() {
         return {
-            rate: null,
+            rate: [],
+            rateResult: null,
             alert: false,
             delivery: false,
             inputValuta: [{ currency: 0 }, { currency: 0 }],
@@ -241,7 +240,10 @@ export default {
     },
 
     created() {
-        this.rate = this.currencyList[this.radioCurrency].saleRate
+        console.log(this.currencyList)
+        for (const { currency, saleRate } of this.currencyList) {
+            this.rate.push({ type: currency, rate: saleRate })
+        }
         this.setCurrency()
     },
 
@@ -256,27 +258,18 @@ export default {
     },
 
     methods: {
-        setCurrency(type = null) {
-            let inputValuta = 0
-            switch (type) {
-                case 'zlot':
-                    // eslint-disable-next-line no-unused-vars
-                    inputValuta = this.inputValuta[1].currency
-                    break
-                case 'funt':
-                    // eslint-disable-next-line no-unused-vars
-                    inputValuta = this.inputValuta[0].currency
-                    break
-            }
+        setCurrency() {
             if (this.currencyList[this.radioCurrency]) {
-                this.rate = this.currencyList[this.radioCurrency].saleRate
+                this.rateResult = +this.rate[this.radioCurrency].rate
             } else {
-                this.rate = parseFloat(this.radioCurrency)
+                this.rateResult = +this.radioCurrency
             }
-            this.rate += this.changeCurrencyList[this.radioChangeCurrency]
+
+            this.rateResult += this.changeCurrencyList[this.radioChangeCurrency]
+
             const result =
                 +this.price *
-                +this.rate.toFixed(2) *
+                +this.rateResult.toFixed(2) *
                 ((100 - this.commissions) / 100).toFixed(2) *
                 ((100 + this.additiveList[this.radioAdditive]) / 100).toFixed(2)
             if (result) {
@@ -291,7 +284,6 @@ export default {
         },
         setRadio(value, i, name = null) {
             if (value === 'radioCurrency') {
-                console.log(name)
                 this.currency = name
             }
 
