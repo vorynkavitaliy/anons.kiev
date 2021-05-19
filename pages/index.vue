@@ -188,7 +188,6 @@ export default {
             rateResult: null,
             alert: false,
             delivery: false,
-            inputValuta: [{ currency: 0 }, { currency: 0 }],
             price: 100,
             commissions: 20,
             inputCurrency: 0,
@@ -240,7 +239,6 @@ export default {
     },
 
     created() {
-        console.log(this.currencyList)
         for (const { currency, saleRate } of this.currencyList) {
             this.rate.push({ type: currency, rate: saleRate })
         }
