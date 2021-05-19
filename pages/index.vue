@@ -5,39 +5,44 @@
             <div class="calc-wrapper m-a p-3">
                 <!-- <v-text block class="mb-3"> Дата: </v-text> -->
                 <v-layout grid xd="2">
-                    <span
-                        v-for="(item, i) of currencyList"
-                        :key="i"
-                        class="checkbox mb-2"
-                        :class="[radioCurrency === i ? 'active' : '']"
-                        @click="setRadio('radioCurrency', i, item.currency)"
-                    >
-                        <i></i>
-                        <template
+                    <template v-for="(item, i) of currencyList">
+                        <v-layout
                             v-if="
                                 item.currency == 'GBP' || item.currency == 'PLN'
                             "
+                            flex
+                            :key="i"
                         >
+                            <span
+                                class="checkbox mb-2"
+                                :class="[radioCurrency === i ? 'active' : '']"
+                                @click="
+                                    setRadio('radioCurrency', i, item.currency)
+                                "
+                            >
+                                <i></i>
+                            </span>
                             <v-input
-                                v-model="inputCurrency"
+                                v-model="inputValuta[i].currency"
                                 type="text"
                                 class="mb-2"
                                 :placeholder="item.currency | currency"
-                                @input="
-                                    setRadio(
-                                        'radioCurrency',
-                                        inputCurrency,
-                                        item.currency
-                                    )
-                                "
+                                @input="setCurrency"
                             />
-                        </template>
-                        <template v-else>
-                            {{ item.currency | currency }}
+                        </v-layout>
 
+                        <span
+                            v-else
+                            :key="i"
+                            class="checkbox mb-2"
+                            :class="[radioCurrency === i ? 'active' : '']"
+                            @click="setRadio('radioCurrency', i, item.currency)"
+                        >
+                            <i></i>
+                            {{ item.currency | currency }}
                             ({{ item.saleRate.toFixed(2) }})
-                        </template>
-                    </span>
+                        </span>
+                    </template>
                 </v-layout>
 
                 <v-layout flex acenter wrap class="mb-2">
@@ -184,6 +189,7 @@ export default {
             rate: null,
             alert: false,
             delivery: false,
+            inputValuta: [{ currency: 0 }, { currency: 0 }],
             price: 100,
             commissions: 20,
             inputCurrency: 0,
@@ -250,7 +256,18 @@ export default {
     },
 
     methods: {
-        setCurrency() {
+        setCurrency(type = null) {
+            let inputValuta = 0
+            switch (type) {
+                case 'zlot':
+                    // eslint-disable-next-line no-unused-vars
+                    inputValuta = this.inputValuta[1].currency
+                    break
+                case 'funt':
+                    // eslint-disable-next-line no-unused-vars
+                    inputValuta = this.inputValuta[0].currency
+                    break
+            }
             if (this.currencyList[this.radioCurrency]) {
                 this.rate = this.currencyList[this.radioCurrency].saleRate
             } else {
